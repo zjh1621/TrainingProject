@@ -1,6 +1,7 @@
 package com.example.moon.controller;
 
 import com.example.moon.DTO.AccessTokenDTO;
+import com.example.moon.DTO.GithubUser;
 import com.example.moon.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,11 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         accessTokenDTO.setClient_id("Ov23li8yntZn5bSXzZH2");
         accessTokenDTO.setClient_secret("c338f844abdb82272d25ec3b1387fb705606cf53");
-        githubProvider.getAccessToken(accessTokenDTO);
+        String accessToken = githubProvider.getAccessToken(accessTokenDTO);
+        GithubUser user = githubProvider.getUser(accessToken);
+        System.out.println(user.getName());
+        System.out.println(user.getId());
+
         return "index";
     }
 }

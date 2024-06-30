@@ -67,8 +67,8 @@ public class GithubProvider {
                 .build();
         try (Response response = getUnsafeOkHttpClient().newCall(request).execute()) {
             String string = response.body().string();
-            System.out.println(string);
-            return string;
+            String token= string.split("&")[0].split("=")[1];
+            return token;
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,8 +83,9 @@ public class GithubProvider {
                 .header("Authorization","token "+accessToken)
                 .build();
         try {
-            Response response = client.newCall(request).execute();
+            Response response = getUnsafeOkHttpClient().newCall(request).execute();
             String string = response.body().string();
+            System.out.println("string:"+string);
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
             return githubUser;
         }catch (Exception e){
