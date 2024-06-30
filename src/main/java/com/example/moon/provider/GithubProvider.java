@@ -85,7 +85,6 @@ public class GithubProvider {
         try {
             Response response = getUnsafeOkHttpClient().newCall(request).execute();
             String string = response.body().string();
-            System.out.println("string:"+string);
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
             return githubUser;
         }catch (Exception e){
