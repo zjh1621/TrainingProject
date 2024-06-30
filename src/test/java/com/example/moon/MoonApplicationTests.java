@@ -1,10 +1,10 @@
-package com.example.mawen;
+package com.example.moon;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MawenApplicationTests {
+class MoonApplicationTests {
 
     @Test
     void contextLoads() {

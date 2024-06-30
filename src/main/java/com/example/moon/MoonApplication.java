@@ -1,13 +1,13 @@
-package com.example.mawen;
+package com.example.moon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MawenApplication {
+public class MoonApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MawenApplication.class, args);
+        SpringApplication.run(MoonApplication.class, args);
     }
 
 }
