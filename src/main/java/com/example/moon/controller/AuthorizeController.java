@@ -5,7 +5,9 @@ import com.example.moon.DTO.GithubUser;
 import com.example.moon.mapper.UserMapper;
 import com.example.moon.model.User;
 import com.example.moon.provider.GithubProvider;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -30,7 +32,7 @@ public class AuthorizeController {
     @GetMapping("callback")
     public String callback(@RequestParam(name="code")String code,
                            @RequestParam(name="state")String state,
-                           HttpServletRequest request){
+                           HttpServletResponse response){
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setCode(code);
         accessTokenDTO.setRedirect_uri(redirect_uri);
@@ -40,15 +42,22 @@ public class AuthorizeController {
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getUser(accessToken);
         if(githubUser!=null){
+            //插入数据库中的user对象
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccount_id(String.valueOf(githubUser.getId()));
             user.setGmt_Create(System.currentTimeMillis());
             user.setGmt_Modified(user.getGmt_Create());
+            //插入数据库
             userMapper.insert(user);
+
+            response.addCookie(new Cookie("token",token));
+
+
             //登陆成功，写cookie和session
-            request.getSession().setAttribute("githubUser",githubUser);
+            //request.getSession().setAttribute("githubUser",githubUser);
             return "redirect:/";
         }
         else{
