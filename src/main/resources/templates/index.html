@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/moon.css">
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -43,5 +44,40 @@
         </div>
     </div>
 </nav>
+
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现</h2>
+            <hr>
+
+            <div class="media" th:each="questionDTO : ${questionDTOList}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-thumbnail"
+                             th:src="${questionDTO.user.avatar_url}" alt="问题发布者头像">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${questionDTO.title}"></h4>
+                    <span th:text="${questionDTO.description}"></span> <br>
+                    <span class="text-desc">
+                        <span th:text="${questionDTO.comment_count}"></span> 个回复 ·
+                        <span th:text="${questionDTO.view_count}"></span> 次浏览 ·
+                        <span th:text="${#calendars.format(questionDTO.gmt_create,'yyyy年MM月dd日')}"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>发起问题指南</h3>
+            ●问题标题：尽可能精简，不超过25个字<br>
+            ●问题补充：详细补充您的问题内容，并确保问题清晰直观，并提供一些相关资料<br>
+            ●选择标签：选择一个或多个合适的标签，用逗号隔开，每个标签不超过十个字
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>

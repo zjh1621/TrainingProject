@@ -1,11 +1,10 @@
-package com.example.moon.model;
+package com.example.moon.DTO;
 
+import com.example.moon.model.User;
 import lombok.Data;
 
-
-//往数据库中插入的用户发布问题的对象
 @Data
-public class Question {
+public class QuestionDTO {
     private Integer id;
     private String title;
     private String description;
@@ -16,4 +15,5 @@ public class Question {
     private Integer view_count;
     private Integer comment_count;
     private Integer like_count;
+    private User user;
 }

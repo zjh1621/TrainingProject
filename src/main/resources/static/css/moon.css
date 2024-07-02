@@ -3,10 +3,19 @@ body{
 }
 .main {
     background-color: white;
-    margin: 100px;
+    margin: 100px 100px 100px 100px;
 }
 .btn-publish {
+    background-color: green;
     float: right;
-    margin-bottom: 15px;
+    margin-bottom: 100px;
 }
-
+.media-object {
+    width: 60px;
+    height: 60px;
+}
+.text-desc {
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
