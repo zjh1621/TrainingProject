@@ -1,5 +1,7 @@
 package com.example.moon.model;
 
+
+//插入数据库的user类
 public class User {
     private Integer id;
     private String name;
