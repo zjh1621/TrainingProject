@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class GithubProvider {
 
+    //奇怪的爆红，getaccessToken等方法提示证书不对爆红，但是网上的办法试遍了都不管用
+    //最后用一个网上的重写client的类，弄了个unsafeclient，忽略了证书验证
     public static OkHttpClient getUnsafeOkHttpClient() {
         try {
             // 创建一个信任所有证书的TrustManager
@@ -55,7 +57,7 @@ public class GithubProvider {
         }
     }
 
-
+    //向github请求accessToken
     public String getAccessToken(AccessTokenDTO accessTokenDTO){
         MediaType mediaType = MediaType.get("application/json");
         OkHttpClient client = new OkHttpClient();
@@ -75,6 +77,7 @@ public class GithubProvider {
         return null;
     }
 
+    //以accessToken向github请求user信息
     public GithubUser getUser(String accessToken){
         OkHttpClient client = new OkHttpClient();
 
