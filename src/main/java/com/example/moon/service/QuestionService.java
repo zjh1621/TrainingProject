@@ -98,4 +98,14 @@ public class QuestionService {
 
         return pageDTO;//返回DTO队列
     }
+
+    public QuestionDTO getById(Integer id) {
+        //根据文章id查询对应文章
+        Question question = questionMapper.getById(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question,questionDTO);
+        User user = userMapper.findById(question.getCreator());//查找对应的user
+        questionDTO.setUser(user);
+        return questionDTO;
+    }
 }

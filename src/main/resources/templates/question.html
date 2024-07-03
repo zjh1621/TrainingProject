@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${questionDTO.title}"></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="/css/moon.css">
+  <script src="/js/jquery-3.7.1.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<!-- 插入导航栏 -->
+<div th:insert="~{navigation :: indexHeader}"></div>
+
+<div class="container-fluid main profile">
+  <div class="row">
+      <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+          <h2><span th:text="${questionDTO.title}"></span></h2>
+          <span class="text-desc">
+              作者：<span th:text="${questionDTO.user.name}"></span> |
+              发布时间：<span th:text="${#calendars.format(questionDTO.gmt_create,'yyyy-MM-dd HH:m')}"></span> |
+              浏览次数：<span th:text="${questionDTO.view_count}"></span>
+          </span>
+          <hr><!-- class="col-lg-12 col-md-12 col-sm-12 col-xs-12" -->
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${questionDTO.description}"></div>
+          <br>
+          <hr>
+          <a th:href="@{'/publish'+${questionDTO.id}}" class="moon-menu">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>编辑
+          </a>
+
+
+
+      </div>
+
+
+      <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <h3>发起人</h3>
+              <div class="media">
+                  <div class="media-left">
+                      <a href="#">
+                          <img class="media-object img-thumbnail"
+                               th:src="${questionDTO.user.avatar_url}" alt="问题发布者头像">
+                      </a>
+                  </div>
+                  <div class="media-body">
+                      <h4 class="media-heading">
+                          <span th:text="${questionDTO.user.name}"></span>
+                      </h4>
+                      <br>
+                  </div>
+              </div>
+              <hr>
+          </div>
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <h3>相关问题</h3>
+          </div>
+      </div>
+  </div>
+</div>
+
+</body>
+</html>

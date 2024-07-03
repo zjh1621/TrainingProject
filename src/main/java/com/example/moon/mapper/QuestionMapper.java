@@ -25,4 +25,8 @@ public interface QuestionMapper {
 
     @Select("select count(1) from question where creator=#{userId}")
     Integer countByUserId(@Param(value = "userId") Integer userId);
+
+    //根据文章id查询对应文章
+    @Select("select * from question where id=#{id}")
+    Question getById(@Param(value = "id") Integer id);
 }
