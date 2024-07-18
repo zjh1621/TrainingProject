@@ -1,10 +1,7 @@
 package com.example.moon.mapper;
 
 import com.example.moon.model.Question;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -29,4 +26,7 @@ public interface QuestionMapper {
     //根据文章id查询对应文章
     @Select("select * from question where id=#{id}")
     Question getById(@Param(value = "id") Integer id);
+
+    @Update("update question set title=#{title},description=#{description},gmt_modified=#{gmt_modified},tag=#{tag} where id=#{id}")
+    void update(Question question);
 }

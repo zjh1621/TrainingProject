@@ -108,4 +108,18 @@ public class QuestionService {
         questionDTO.setUser(user);
         return questionDTO;
     }
+
+    //文章发布与修改
+    public void createOrUpdate(Question question) {
+        if(question.getId()==null){
+            //没有id，证明该文章刚被创建
+            question.setGmt_create(System.currentTimeMillis());
+            question.setGmt_modified(question.getGmt_create());
+            questionMapper.create(question);
+        }else{
+            //有id，证明该文章正在被修改
+            question.setGmt_modified(System.currentTimeMillis());
+            questionMapper.update(question);
+        }
+    }
 }

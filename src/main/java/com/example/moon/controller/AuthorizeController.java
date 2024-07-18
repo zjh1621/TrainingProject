@@ -2,9 +2,9 @@ package com.example.moon.controller;
 
 import com.example.moon.DTO.AccessTokenDTO;
 import com.example.moon.DTO.GithubUser;
-import com.example.moon.mapper.UserMapper;
 import com.example.moon.model.User;
 import com.example.moon.provider.GithubProvider;
+import com.example.moon.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,9 +27,9 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirect_uri;
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
-    @GetMapping("callback")
+    @GetMapping("/callback")
     public String callback(@RequestParam(name="code")String code,
                            @RequestParam(name="state")String state,
                            HttpServletResponse response){
@@ -48,14 +48,11 @@ public class AuthorizeController {
             user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccount_id(String.valueOf(githubUser.getId()));
-            user.setGmt_create(System.currentTimeMillis());
-            user.setGmt_modified(user.getGmt_create());
             user.setAvatar_url(githubUser.getAvatar_url());
-            //插入数据库
-            userMapper.insert(user);
 
+            //更新数据库
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",token));
-
 
             //登陆成功，写cookie和session
             //request.getSession().setAttribute("githubUser",githubUser);
@@ -66,4 +63,15 @@ public class AuthorizeController {
             return "redirect:/";
         }
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
+
 }
