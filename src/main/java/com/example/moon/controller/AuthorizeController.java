@@ -47,8 +47,8 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(githubUser.getName());
-            user.setAccount_id(String.valueOf(githubUser.getId()));
-            user.setAvatar_url(githubUser.getAvatar_url());
+            user.setAccountId(String.valueOf(githubUser.getId()));
+            user.setAvatarUrl(githubUser.getAvatar_url());
 
             //更新数据库
             userService.createOrUpdate(user);

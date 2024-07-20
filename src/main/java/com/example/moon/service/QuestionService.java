@@ -5,7 +5,9 @@ import com.example.moon.DTO.QuestionDTO;
 import com.example.moon.mapper.QuestionMapper;
 import com.example.moon.mapper.UserMapper;
 import com.example.moon.model.Question;
+import com.example.moon.model.QuestionExample;
 import com.example.moon.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,9 @@ public class QuestionService {
 
     public  PageDTO list(Integer userId, Integer page, Integer size) {
         {
-            Integer totalCount = questionMapper.countByUserId(userId);//计算总条目数
+            QuestionExample questionExample = new QuestionExample();
+            questionExample.createCriteria().andCreatorEqualTo(userId);
+            Integer totalCount = (int) questionMapper.countByExample(questionExample);//计算总条目数
             Integer totalPage = 0;
             //计算总页码
             if (totalCount % size == 0) {
@@ -43,13 +47,20 @@ public class QuestionService {
         if(offset<0){
             offset=0;
         }
-        Integer totalCount = questionMapper.countByUserId(userId);//计算总条目数
-        List<Question> questionList = questionMapper.listByUserId(userId, offset, size);//获取数据库中的question对象的list
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria().andCreatorEqualTo(userId);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);//计算总条目数
+
+        // 获取数据库中的question对象的list
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCreatorEqualTo(userId);
+        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
+
         List<QuestionDTO> questionDTOList = new ArrayList<>();//传输层QuestionDTO对象的list
 
         PageDTO pageDTO = new PageDTO();
         for (Question question : questionList) {//遍历QuestionList
-            User user = userMapper.findById(question.getCreator());//查找对应的user
+            User user = userMapper.selectByPrimaryKey(question.getCreator());//查找对应的user
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDTO);//将Question对象保存到DTO对象中
             questionDTO.setUser(user);//为DTO元素加上id对应的User对象
@@ -63,7 +74,7 @@ public class QuestionService {
 
     public PageDTO list(Integer page, Integer size) {
         {
-            Integer totalCount = questionMapper.count();//计算总条目数
+            Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());//计算总条目数
             Integer totalPage = 0;
             //计算总页码
             if (totalCount % size == 0) {
@@ -81,13 +92,14 @@ public class QuestionService {
         }            //防止页码出错
         //获取偏移量，（页码-1）乘每页数目，即是数据库查找字段的开始
         Integer offset = size * (page - 1);
-        Integer totalCount = questionMapper.count();//计算总条目数
-        List<Question> questionList = questionMapper.list(offset, size);//获取数据库中的question对象的list
+        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());//计算总条目数
+        //获取数据库中的question对象的list
+        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(new QuestionExample(),new RowBounds(offset,size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();//传输层QuestionDTO对象的list
 
         PageDTO pageDTO = new PageDTO();
         for (Question question : questionList) {//遍历QuestionList
-            User user = userMapper.findById(question.getCreator());//查找对应的user
+            User user = userMapper.selectByPrimaryKey(question.getCreator());//查找对应的user
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDTO);//将Question对象保存到DTO对象中
             questionDTO.setUser(user);//为DTO元素加上id对应的User对象
@@ -101,10 +113,10 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         //根据文章id查询对应文章
-        Question question = questionMapper.getById(id);
+        Question question = questionMapper.selectByPrimaryKey(id);
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
-        User user = userMapper.findById(question.getCreator());//查找对应的user
+        User user = userMapper.selectByPrimaryKey(question.getCreator());//查找对应的user
         questionDTO.setUser(user);
         return questionDTO;
     }
@@ -113,13 +125,21 @@ public class QuestionService {
     public void createOrUpdate(Question question) {
         if(question.getId()==null){
             //没有id，证明该文章刚被创建
-            question.setGmt_create(System.currentTimeMillis());
-            question.setGmt_modified(question.getGmt_create());
-            questionMapper.create(question);
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.insert(question);
         }else{
             //有id，证明该文章正在被修改
-            question.setGmt_modified(System.currentTimeMillis());
-            questionMapper.update(question);
+            //设置要更新的内容
+            Question updateQuestion = new Question();
+            updateQuestion.setGmtModified(System.currentTimeMillis());
+            updateQuestion.setTitle(question.getTitle());
+            updateQuestion.setDescription(question.getDescription());
+            updateQuestion.setTag(question.getTag());
+            //设置更新规则：按文章ID匹配
+            QuestionExample questionExample = new QuestionExample();
+            questionExample.createCriteria().andIdEqualTo(question.getId());
+            questionMapper.updateByExampleSelective(updateQuestion, questionExample);
         }
     }
 }

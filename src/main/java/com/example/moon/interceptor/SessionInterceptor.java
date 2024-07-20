@@ -2,6 +2,7 @@ package com.example.moon.interceptor;
 
 import com.example.moon.mapper.UserMapper;
 import com.example.moon.model.User;
+import com.example.moon.model.UserExample;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Service
 public class SessionInterceptor implements HandlerInterceptor {
@@ -22,8 +25,13 @@ public class SessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {//在cookie列表中找到token
                     String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);//则去数据库中寻找是否有对应的cookie
-                    request.getSession().setAttribute("user", user);//将查找结果赋给session
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria()
+                                    .andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if(users.size()!=0) {
+                        request.getSession().setAttribute("user", users.get(0));//将查找结果赋给session
+                    }
                     break;
                 }
             }
