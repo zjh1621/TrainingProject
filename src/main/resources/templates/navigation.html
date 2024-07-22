@@ -39,6 +39,11 @@
             <a href="https://github.com/login/oauth/authorize?client_id=Ov23li8yntZn5bSXzZH2&redirect_uri=http://localhost:8887/callback&scope=user&state=123">登录</a>
           </li>
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li th:if="${session.user!=null}">
+            <a href="/publish">发布</a>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
