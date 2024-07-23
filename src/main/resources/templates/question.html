@@ -20,8 +20,8 @@
           <h2><span th:text="${questionDTO.title}"></span></h2>
           <span class="text-desc">
               作者：<span th:text="${questionDTO.user.name}"></span> |
-              发布时间：<span th:text="${#calendars.format(questionDTO.gmt_create,'yyyy-MM-dd HH:m')}"></span> |
-              浏览次数：<span th:text="${questionDTO.view_count}"></span>
+              发布时间：<span th:text="${#calendars.format(questionDTO.gmtCreate,'yyyy-MM-dd HH:m')}"></span> |
+              浏览次数：<span th:text="${questionDTO.viewCount}"></span>
           </span>
           <hr><!-- class="col-lg-12 col-md-12 col-sm-12 col-xs-12" -->
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${questionDTO.description}"></div>

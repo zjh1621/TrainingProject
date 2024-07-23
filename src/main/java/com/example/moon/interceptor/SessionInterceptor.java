@@ -1,5 +1,6 @@
 package com.example.moon.interceptor;
 
+import com.example.moon.exception.CustomizeException;
 import com.example.moon.mapper.UserMapper;
 import com.example.moon.model.User;
 import com.example.moon.model.UserExample;
@@ -36,6 +37,7 @@ public class SessionInterceptor implements HandlerInterceptor {
                 }
             }
         }
+
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 

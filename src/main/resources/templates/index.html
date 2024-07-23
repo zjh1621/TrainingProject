@@ -3,11 +3,11 @@
 <head>
     <title>白月青竹项目学习</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="css/moon.css">
-    <script src="js/jquery-3.7.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/moon.css">
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -33,9 +33,9 @@
                     </h4>
                     <span th:text="${questionDTO.description}"></span> <br>
                     <span class="text-desc">
-                        <span th:text="${questionDTO.comment_count}"></span> 个回复 ·
-                        <span th:text="${questionDTO.view_count}"></span> 次浏览 ·
-                        <span th:text="${#calendars.format(questionDTO.gmt_create,'yyyy-MM-dd HH:m')}"></span></span>
+                        <span th:text="${questionDTO.commentCount}"></span> 个回复 ·
+                        <span th:text="${questionDTO.viewCount}"></span> 次浏览 ·
+                        <span th:text="${#calendars.format(questionDTO.gmtCreate,'yyyy-MM-dd HH:m')}"></span></span>
                 </div>
             </div>
 

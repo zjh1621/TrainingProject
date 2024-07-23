@@ -1,10 +1,13 @@
 package com.example.moon.controller;
 
 import com.example.moon.DTO.QuestionDTO;
+import com.example.moon.exception.CustomizeErrorCode;
+import com.example.moon.exception.CustomizeException;
 import com.example.moon.model.Question;
 import com.example.moon.model.User;
 import com.example.moon.service.QuestionService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +28,13 @@ public class PublishController {
 
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name="id") Integer id,
-                       Model model){
+                       Model model,
+                       HttpServletRequest request){
         QuestionDTO question = questionService.getById(id);
+        if(!question.getCreator().equals(((User) request.getSession().getAttribute("user")).getId())){
+            //登录的用户与文章作者不匹配
+            throw new CustomizeException(CustomizeErrorCode.UNAUTHORIZED_ACCESS);
+        }
         model.addAttribute("title",question.getTitle());
         model.addAttribute("description",question.getDescription());
         model.addAttribute("tag",question.getTag());

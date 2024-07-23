@@ -2,6 +2,8 @@ package com.example.moon.service;
 
 import com.example.moon.DTO.PageDTO;
 import com.example.moon.DTO.QuestionDTO;
+import com.example.moon.exception.CustomizeErrorCode;
+import com.example.moon.exception.CustomizeException;
 import com.example.moon.mapper.QuestionMapper;
 import com.example.moon.mapper.UserMapper;
 import com.example.moon.model.Question;
@@ -114,6 +116,9 @@ public class QuestionService {
     public QuestionDTO getById(Integer id) {
         //根据文章id查询对应文章
         Question question = questionMapper.selectByPrimaryKey(id);
+        if(question==null){//文章不存在
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
         User user = userMapper.selectByPrimaryKey(question.getCreator());//查找对应的user
@@ -127,7 +132,7 @@ public class QuestionService {
             //没有id，证明该文章刚被创建
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
-            questionMapper.insert(question);
+            questionMapper.insertSelective(question);
         }else{
             //有id，证明该文章正在被修改
             //设置要更新的内容
@@ -139,7 +144,22 @@ public class QuestionService {
             //设置更新规则：按文章ID匹配
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            if(updated !=1){//文章不存在
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+    }
+
+    public void increaseView(Integer id) {
+        //获取现阅读量
+        Integer oldViewCount = questionMapper.selectByPrimaryKey(id).getViewCount();
+        //更新question
+        Question updateQuestion = new Question();
+        //设置新阅读量为现有阅读量+1
+        updateQuestion.setViewCount(oldViewCount+1);
+        QuestionExample updateQuestionExample = new QuestionExample();
+        updateQuestionExample.createCriteria().andIdEqualTo(id);
+        questionMapper.updateByExampleSelective(updateQuestion,updateQuestionExample);
     }
 }
