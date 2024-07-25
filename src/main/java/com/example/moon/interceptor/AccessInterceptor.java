@@ -1,5 +1,6 @@
 package com.example.moon.interceptor;
 
+import com.example.moon.exception.CustomizeErrorCode;
 import com.example.moon.exception.CustomizeException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +13,7 @@ public class AccessInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (request.getSession().getAttribute("user")==null){
-            throw new CustomizeException("请先登录！");
+            throw new CustomizeException(CustomizeErrorCode.NO_LOGIN);
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

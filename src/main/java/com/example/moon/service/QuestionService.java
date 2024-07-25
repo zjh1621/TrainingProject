@@ -24,7 +24,7 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public  PageDTO list(Integer userId, Integer page, Integer size) {
+    public  PageDTO list(Long userId, Integer page, Integer size) {
         {
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andCreatorEqualTo(userId);
@@ -113,7 +113,7 @@ public class QuestionService {
         return pageDTO;//返回DTO队列
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         //根据文章id查询对应文章
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question==null){//文章不存在
@@ -151,7 +151,8 @@ public class QuestionService {
         }
     }
 
-    public void increaseView(Integer id) {
+    //增加阅读量
+    public void increaseView(Long id) {
         //获取现阅读量
         Integer oldViewCount = questionMapper.selectByPrimaryKey(id).getViewCount();
         //更新question
@@ -162,4 +163,18 @@ public class QuestionService {
         updateQuestionExample.createCriteria().andIdEqualTo(id);
         questionMapper.updateByExampleSelective(updateQuestion,updateQuestionExample);
     }
+
+    //增加评论量
+    public void increaseComment(Long id) {
+        //获取现评论量
+        Integer oldCommentCount = questionMapper.selectByPrimaryKey(id).getCommentCount();
+        //更新question
+        Question updateQuestion = new Question();
+        //设置新阅读量为现有阅读量+1
+        updateQuestion.setCommentCount(oldCommentCount+1);
+        QuestionExample updateQuestionExample = new QuestionExample();
+        updateQuestionExample.createCriteria().andIdEqualTo(id);
+        questionMapper.updateByExampleSelective(updateQuestion,updateQuestionExample);
+    }
+
 }

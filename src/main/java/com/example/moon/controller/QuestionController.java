@@ -17,7 +17,7 @@ public class QuestionController {
     QuestionService questionService;
 
     @GetMapping("/question/{id}")
-    public String question(@PathVariable(name = "id") Integer id,
+    public String question(@PathVariable(name = "id") Long id,
                            Model model){
         //根据文章id查询对应文章DTO对象
         QuestionDTO questionDTO = questionService.getById(id);
