@@ -3,6 +3,7 @@ package com.example.moon.exception;
 
 //自定义错误码
 public enum CustomizeErrorCode {
+    SUCCESS(20000,"成功",""),
     TARGET_PARAM_NOT_FOUND(40000, "请求参数错误", ""),
     QUESTION_NOT_FOUND(40001, "你访问的文章似乎不存在呢", ""),
     COMMENT_NOT_FOUND(40002, "回复的评论不存在", ""),

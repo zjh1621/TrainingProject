@@ -13,10 +13,17 @@ function postComment() {
             "type": 0
         }),
         success: function (response) {
-            if(response.code==200){
-                $("#comment_section").hide();
-            }else{
-                alert(response.message());
+            if (response.code == 20000) {
+                $("#content").val("");
+            } else {
+                if (response.code == 40101) {
+                    let isAccepted = confirm(response.message);
+                    if (isAccepted) {
+                        window.open("https://github.com/login/oauth/authorize?client_id=Ov23li8yntZn5bSXzZH2&redirect_uri=http://localhost:8887/callback&scope=user&state=123")
+                    }
+                } else {
+                    alert(response.message);
+                }
             }
             console.log(response);
         },
