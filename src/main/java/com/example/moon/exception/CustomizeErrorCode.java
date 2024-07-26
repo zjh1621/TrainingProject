@@ -9,7 +9,7 @@ public enum CustomizeErrorCode {
     COMMENT_NOT_FOUND(40002, "回复的评论不存在", ""),
 
     UNAUTHORIZED_ACCESS(40100, "无权限访问", ""),
-    NO_LOGIN(40101, "未登录！", ""),
+    NO_LOGIN(40101, "先登录再操作吧~", ""),
 
     UNKNOWN_ERROR(50000, "哎呀！服务似乎出问题了！怎么会事呢……", "未知错误"),
     ;

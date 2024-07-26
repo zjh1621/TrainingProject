@@ -1,32 +1,53 @@
-body{
+body {
     background-color: #efefef;
 }
+
 .main {
     background-color: white;
     margin: 100px 100px 100px 100px;
 }
+
 .btn-publish {
     background-color: green;
     float: right;
     margin-bottom: 100px;
 }
+
 .media-object {
     width: 60px;
     height: 60px;
 }
+
 .text-desc {
     font-size: 12px;
     font-weight: normal;
     color: #999;
 }
+
 .profile .section {
     margin-top: 15px;
 }
+
 .moon-menu {
     color: #999;
     font-size: 13px;
 }
+
 .comment {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.gray-color {
+    color: #999;
+}
+
+.comment-footer {
+    margin-left: 15px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.comment-footer:hover {
+    color: #499ef3;
 }
