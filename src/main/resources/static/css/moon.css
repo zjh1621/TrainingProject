@@ -48,6 +48,17 @@ body {
     cursor: pointer;
 }
 
+.folding-active {
+    color: #499ef3;
+}
+
+.folding-comments{
+    margin-top: 10px;
+    padding-top: 20px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
 .comment-footer:hover {
     color: #499ef3;
 }
