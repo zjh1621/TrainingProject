@@ -1,8 +1,8 @@
 package com.example.moon.controller;
 
-import com.example.moon.DTO.CommentCreateDTO;
 import com.example.moon.DTO.CommentDTO;
 import com.example.moon.DTO.QuestionDTO;
+import com.example.moon.enums.CommentTypeEnum;
 import com.example.moon.service.CommentService;
 import com.example.moon.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class QuestionController {
         //根据文章id查询对应文章DTO对象
         QuestionDTO questionDTO = questionService.getById(id);
         //根据文章id查询对应文章的所有评论commentDTO
-        List<CommentDTO> commentDTOList = commentService.listByQuestionId(id);
+        List<CommentDTO> commentDTOList = commentService.listByParentId(id, CommentTypeEnum.QUESTION.getType());
 
         //插入model
         model.addAttribute("questionDTO", questionDTO);

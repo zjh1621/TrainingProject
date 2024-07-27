@@ -1,7 +1,9 @@
 package com.example.moon.controller;
 
 import com.example.moon.DTO.CommentCreateDTO;
+import com.example.moon.DTO.CommentDTO;
 import com.example.moon.DTO.ResultDTO;
+import com.example.moon.enums.CommentTypeEnum;
 import com.example.moon.exception.CustomizeErrorCode;
 import com.example.moon.model.Comment;
 import com.example.moon.model.User;
@@ -9,10 +11,9 @@ import com.example.moon.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class CommentController {
@@ -40,5 +41,12 @@ public class CommentController {
         commentService.insert(comment);
 
         return ResultDTO.errorOf(CustomizeErrorCode.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getComment/{id}", method = RequestMethod.GET)
+    public ResultDTO getComments(@PathVariable(name = "id")Long id){
+        List<CommentDTO> commentDTOList = commentService.listByParentId(id, CommentTypeEnum.COMMENT.getType());
+        return ResultDTO.okOf(commentDTOList);
     }
 }

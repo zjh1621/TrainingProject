@@ -3,14 +3,12 @@ package com.example.moon.DTO;
 import com.example.moon.exception.CustomizeErrorCode;
 import com.example.moon.exception.CustomizeException;
 import lombok.Data;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.security.interfaces.RSAKey;
 
 @Data
-public class ResultDTO {
+public class ResultDTO<T> {
     private Integer code;
     private String message;
+    private T data;
 
     public static ResultDTO errorOf(Integer code,String message){
         ResultDTO resultDTO = new ResultDTO();
@@ -30,6 +28,14 @@ public class ResultDTO {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.code=e.getCode();
         resultDTO.message=e.getMessage();
+        return resultDTO;
+    }
+
+    public static <T> ResultDTO okOf(T data) {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(CustomizeErrorCode.SUCCESS.getCode());
+        resultDTO.setMessage(CustomizeErrorCode.SUCCESS.getMessage());
+        resultDTO.setData(data);
         return resultDTO;
     }
 }

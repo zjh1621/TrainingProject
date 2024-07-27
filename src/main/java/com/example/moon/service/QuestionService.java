@@ -113,6 +113,7 @@ public class QuestionService {
         return pageDTO;//返回DTO队列
     }
 
+    //根据文章id查询对应文章
     public QuestionDTO getById(Long id) {
         //根据文章id查询对应文章
         Question question = questionMapper.selectByPrimaryKey(id);

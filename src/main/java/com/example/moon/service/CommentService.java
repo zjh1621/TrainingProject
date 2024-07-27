@@ -44,34 +44,53 @@ public class CommentService {
         }
         if (comment.getType() == CommentTypeEnum.COMMENT.getType()) {
             //回复评论
-            //todo
-//            Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
-//            if (dbComment == null) {
-//                throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
-//            }
-
+            //获取回复的评论的对象
+            Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
+            if (dbComment == null) {
+                throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
+            }
+            //保存评论
+            commentMapper.insertSelective(comment);
+            //该评论回复的评论的评论数加一
+            this.increaseComment(dbComment.getId());
+            //该评论对应的文章的评论数加一
+            questionService.increaseComment(dbComment.getParentId());
         } else {
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
+            //保存评论
             commentMapper.insertSelective(comment);
             //被评论的文章的评论数加一
-            if(comment.getType()==0){//type=0表示回复的是问题
-                //被评论的文章的评论数加一
-                questionService.increaseComment(comment.getParentId());
-            }
+            questionService.increaseComment(comment.getParentId());
         }
     }
 
+    //增加评论数
+    private void increaseComment(Long id) {
+        //获取现评论量
+        Integer oldCommentCount = commentMapper.selectByPrimaryKey(id).getCommentCount();
+        //更新comment
+        Comment updateComment = new Comment();
+        //设置新阅读量为现有阅读量+1
+        updateComment.setCommentCount(oldCommentCount+1);
+        CommentExample updateCommentExample = new CommentExample();
+        updateCommentExample.createCriteria().andIdEqualTo(id);
+        commentMapper.updateByExampleSelective(updateComment,updateCommentExample);
+    }
+
     //列举出问题的回复列表
-    public List<CommentDTO> listByQuestionId(Long questionId) {
+    public List<CommentDTO> listByParentId(Long questionId, int type) {
         CommentExample commentExample = new CommentExample();
-        commentExample.createCriteria().andParentIdEqualTo(questionId).andTypeEqualTo(0);
+        commentExample.createCriteria()
+                .andParentIdEqualTo(questionId)
+                .andTypeEqualTo(type);
+        commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
 
-        if(comments.size()==0){
+        if (comments.size() == 0) {
             return new ArrayList<>();
         }
         //获取所有评论的用户id列表，并去重
@@ -89,7 +108,7 @@ public class CommentService {
         //将comment转化为commentDTO，在此过程中向commentDTO加入user对象
         List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
             CommentDTO commentDTO = new CommentDTO();
-            BeanUtils.copyProperties(comment,commentDTO);
+            BeanUtils.copyProperties(comment, commentDTO);
             commentDTO.setUser(userMap.get(comment.getCommentator()));
             return commentDTO;
         }).toList();

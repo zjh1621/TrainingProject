@@ -9,6 +9,7 @@
     <script src="/js/jquery-3.7.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/moon.js"></script>
+    <script src="/js/moment.js"></script>
 </head>
 <body>
 
@@ -60,53 +61,36 @@
                                  th:src="${comment.user.avatarUrl}" alt="问题发布者头像">
                         </a>
                     </div>
-                    <div class="media-body">
+                    <div class="media-body" th:id="${'comment-body-'+comment.id}">
                         <h4 class="media-heading gray-color">
                             <span th:text="${comment.user.name}"></span>
                         </h4>
                         <div style="margin-left: 15px;margin-top: 15px;" th:text="${comment.content}"></div>
                         <!--评论的点赞、评论、时间等footer条-->
                         <div class="gray-color">
-                            <span class="glyphicon glyphicon-thumbs-up comment-footer"
-                                  th:text=" ${comment.likeCount}"></span>
+                            <span class="glyphicon glyphicon-thumbs-up comment-footer"></span>
+                            <span th:text=" ${comment.likeCount}"></span>
                             <span class="glyphicon glyphicon-comment comment-footer" th:data-id="${comment.id}"
                                   onclick="foldingComments(this)"></span>
+                            <span th:text="${comment.commentCount}"></span>
                             <span class="pull-right"
                                   th:text="${#calendars.format(comment.gmtCreate,'yyyy-MM-dd HH:m')}"></span>
                         </div>
                         <!--二级评论全部内容-->
-                        <div class="collapse folding-comments" th:id="${'comment-'+comment.id}">
-                            <!--二级评论列表-->
-                            <div th:each="comment : ${commentDTOList}" style="margin-left: 20px;margin-right: 20px;">
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img class="media-object img-thumbnail"
-                                             th:src="${comment.user.avatarUrl}" alt="问题发布者头像">
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading gray-color">
-                                        <span th:text="${comment.user.name}"></span>
-                                    </h4>
-                                    <div style="margin-left: 15px;margin-top: 15px;" th:text="${comment.content}"></div>
-                                    <!--评论的点赞、评论、时间等footer条-->
-                                    <div class="gray-color">
-                                        <span class="glyphicon glyphicon-thumbs-up comment-footer"
-                                              th:text=" ${comment.likeCount}"></span>
-                                        <span class="pull-right"
-                                              th:text="${#calendars.format(comment.gmtCreate,'yyyy-MM-dd HH:m')}"></span>
-                                    </div>
-                                </div>
-                                <hr>
-                            </div>
+                        <div class="collapse" th:id="${'comment-'+comment.id}">
                             <!--二级评论回复框-->
-                            <div th:if="${session.user!=null}">
-                                <input type="hidden" th:value="${comment.id}" id="commentId">
+                            <div th:if="${session.user!=null}" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <!--/*@thymesVar id="content" type="string"*/-->
-                                <textarea class="form-control comment" id="folding-content" rows="3" placeholder="说点什么吧~"></textarea>
+                                <textarea class="form-control comment" rows="3" cols="10"
+                                          th:id="${'secondComment-'+comment.id}" placeholder="说点什么吧~"></textarea>
                                 <span class="alert alert-danger" th:text="${error}" th:if="${error!=null}"></span>
-                                <button type="submit" class="btn btn-success btn-publish pull-right" onclick="">回复</button>
+                                <button type="submit" class="btn btn-success pull-right" th:data-id="${comment.id}"
+                                        onclick="postCommentController(1,this)">回复
+                                </button>
                             </div>
+                            <!--二级评论列表-->
+                            <!--此处在moon.js中生成列表-->
+
                         </div>
                     </div>
                     <hr>
@@ -137,7 +121,8 @@
                     <!--/*@thymesVar id="content" type="string"*/-->
                     <textarea class="form-control comment" id="content" rows="6" placeholder="说点什么吧~"></textarea>
                     <span class="alert alert-danger" th:text="${error}" th:if="${error!=null}"></span>
-                    <button type="submit" class="btn btn-success btn-publish" onclick="postComment()">回复</button>
+                    <button type="submit" class="btn btn-success btn-publish" onclick="postCommentController(0,this)">回复
+                    </button>
                 </div>
             </div>
 
