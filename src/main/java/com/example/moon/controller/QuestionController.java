@@ -3,6 +3,7 @@ package com.example.moon.controller;
 import com.example.moon.DTO.CommentDTO;
 import com.example.moon.DTO.QuestionDTO;
 import com.example.moon.enums.CommentTypeEnum;
+import com.example.moon.model.Question;
 import com.example.moon.service.CommentService;
 import com.example.moon.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,14 @@ public class QuestionController {
                            Model model) {
         //根据文章id查询对应文章DTO对象
         QuestionDTO questionDTO = questionService.getById(id);
+        //获取与当前文章标签相似的文章
+        List<Question> relatedQuestionList = questionService.getRelatedByTag(questionDTO);
         //根据文章id查询对应文章的所有评论commentDTO
         List<CommentDTO> commentDTOList = commentService.listByParentId(id, CommentTypeEnum.QUESTION.getType());
 
         //插入model
         model.addAttribute("questionDTO", questionDTO);
+        model.addAttribute("relatedQuestionList", relatedQuestionList);
         model.addAttribute("commentDTOList", commentDTOList);
         //阅读数加一
         questionService.increaseView(id);

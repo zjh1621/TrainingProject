@@ -96,7 +96,9 @@ public class QuestionService {
         Integer offset = size * (page - 1);
         Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());//计算总条目数
         //获取数据库中的question对象的list
-        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(new QuestionExample(),new RowBounds(offset,size));
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("gmt_create desc");
+        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds(offset,size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();//传输层QuestionDTO对象的list
 
         PageDTO pageDTO = new PageDTO();
@@ -114,9 +116,9 @@ public class QuestionService {
     }
 
     //根据文章id查询对应文章
-    public QuestionDTO getById(Long id) {
+    public QuestionDTO getById(Long questionId) {
         //根据文章id查询对应文章
-        Question question = questionMapper.selectByPrimaryKey(id);
+        Question question = questionMapper.selectByPrimaryKey(questionId);
         if(question==null){//文章不存在
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
@@ -153,29 +155,51 @@ public class QuestionService {
     }
 
     //增加阅读量
-    public void increaseView(Long id) {
+    public void increaseView(Long questionId) {
         //获取现阅读量
-        Integer oldViewCount = questionMapper.selectByPrimaryKey(id).getViewCount();
+        Integer oldViewCount = questionMapper.selectByPrimaryKey(questionId).getViewCount();
         //更新question
         Question updateQuestion = new Question();
         //设置新阅读量为现有阅读量+1
         updateQuestion.setViewCount(oldViewCount+1);
         QuestionExample updateQuestionExample = new QuestionExample();
-        updateQuestionExample.createCriteria().andIdEqualTo(id);
+        updateQuestionExample.createCriteria().andIdEqualTo(questionId);
         questionMapper.updateByExampleSelective(updateQuestion,updateQuestionExample);
     }
 
+    //分析标签
+    public void generateTag(Long questionId){
+
+    }
+
     //增加评论量
-    public void increaseComment(Long id) {
+    public void increaseComment(Long questionId) {
         //获取现评论量
-        Integer oldCommentCount = questionMapper.selectByPrimaryKey(id).getCommentCount();
+        Integer oldCommentCount = questionMapper.selectByPrimaryKey(questionId).getCommentCount();
         //更新question
         Question updateQuestion = new Question();
         //设置新阅读量为现有阅读量+1
         updateQuestion.setCommentCount(oldCommentCount+1);
         QuestionExample updateQuestionExample = new QuestionExample();
-        updateQuestionExample.createCriteria().andIdEqualTo(id);
+        updateQuestionExample.createCriteria().andIdEqualTo(questionId);
         questionMapper.updateByExampleSelective(updateQuestion,updateQuestionExample);
     }
 
+    public List<Question> getRelatedByTag(QuestionDTO questionDTO) {
+        if(questionDTO.getTag()==null){
+            return new ArrayList<>();
+        }
+        String[] splitTags = questionDTO.getTag().split(",|，");
+        //第一部分，选出来的文章的id不能等于自己
+        QuestionExample relatedQuestionExample = new QuestionExample();
+//        relatedQuestionExample.createCriteria().andIdNotEqualTo(questionDTO.getId());
+
+        //第二部分，一大堆的or
+        for(String splitTag : splitTags){
+            //对应SQL的判断语句为：Tag Like splitTag1 or Tag Like splitTag2 or....Tag Like splitTag(n)
+            relatedQuestionExample.or().andTagLike("%"+splitTag+"%");
+        }
+        List<Question> questionList = questionMapper.selectByExample(relatedQuestionExample);
+        return questionList;
+    }
 }

@@ -105,7 +105,7 @@ function foldingComments(e) {
                         "html": comment.likeCount
                     })).append($("<span/>", {
                         "class": "pull-right",
-                        "html": moment(comment.gmtCreate).format('YYYY-MM-DD HH:m')
+                        "html": moment(comment.gmtCreate).format('YYYY-MM-DD HH:mm')
                     })));
 
                     let mediaElement = $("<div/>", {
