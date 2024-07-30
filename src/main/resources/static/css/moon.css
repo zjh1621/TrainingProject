@@ -48,6 +48,10 @@ body {
     cursor: pointer;
 }
 
+.comment-footer:hover {
+    color: #499ef3;
+}
+
 .folding-active {
     color: #499ef3;
 }
@@ -58,7 +62,12 @@ body {
     border: 1px solid #eee;
     border-radius: 5px;
 }
-
-.comment-footer:hover {
-    color: #499ef3;
+.publish-tags{
+    cursor: pointer;
+    font-size: 90%;
+    margin-left: 5px;
+    white-space: normal;
+}
+.publish-tags:hover{
+    color: #999;
 }

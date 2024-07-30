@@ -2,7 +2,7 @@
  * 提交对文章的评论
  */
 
-function postCommentController(type,e) {
+function postCommentController(type, e) {
     if (type === 0) {
         //type=0代表回答问题,type=1代表回答另一个评论
         let parentId = $("#questionId").val();
@@ -10,7 +10,7 @@ function postCommentController(type,e) {
         let commentator = $("#commentator").val();
         postComment(parentId, content, commentator, type);
     } else if (type === 1) {
-        let parentId =e.getAttribute("data-id");
+        let parentId = e.getAttribute("data-id");
         let content = $("#secondComment-" + parentId).val();
         let commentator = $("#commentator").val();
         postComment(parentId, content, commentator, type);
@@ -101,7 +101,7 @@ function foldingComments(e) {
                     })).append($("<span/>", {
                         "class": "glyphicon glyphicon-thumbs-up comment-footer",
                     })).append($("<span/>", {
-                        "style":"margin-left: 3px;",
+                        "style": "margin-left: 3px;",
                         "html": comment.likeCount
                     })).append($("<span/>", {
                         "class": "pull-right",
@@ -133,6 +133,21 @@ function foldingComments(e) {
         e.setAttribute("data-folding", "in");
         e.classList.add("folding-active");
     }
+}
 
+function showSelectTag() {
+    $("#select-tag").show();
+}
 
+function selectTag(e) {
+    var value = e.getAttribute("data-tag");
+    var previous = $("#tag").val();
+    let strings = previous.split(',');
+    if (strings.indexOf(value) === -1) {
+        if (previous) {
+            $("#tag").val(previous + ',' + value);
+        } else {
+            $("#tag").val(value);
+        }
+    }
 }
