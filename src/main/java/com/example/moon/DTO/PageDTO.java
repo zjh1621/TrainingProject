@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PageDTO {
-    private List<QuestionDTO> questionDTOList;//文章列表
+public class PageDTO<T> {
+    private List<T> data;//文章列表
     private boolean showPrevious;//是否显示 上一页 按钮
     private boolean showNext;//是否显示 下一页 按钮
     private boolean showFirstPage;//是否显示 第一页 按钮
@@ -21,51 +21,46 @@ public class PageDTO {
 
         Integer totalPage = 0;
         //计算总页码
-        if(totalCount % size ==0){
+        if (totalCount % size == 0) {
             totalPage = totalCount / size;
-        }
-        else{
+        } else {
             totalPage = totalCount / size + 1;
         }
-        this.page=page;
-        this.totalPage=totalPage;
+        this.page = page;
+        this.totalPage = totalPage;
         pages.add(page);
-        for(int i=1;i<=2;i++){
-            if(page-i>0){
-                pages.add(0,page-i);
+        for (int i = 1; i <= 5; i++) {
+            if (page - i > 0) {
+                pages.add(0, page - i);
             }
-            if(page+i<=totalPage){
-                pages.add(page+i);
+            if (page + i <= totalPage) {
+                pages.add(page + i);
             }
         }
 
         //根据当前页码，决定是否显示 上一页 按钮
-        if(page==1){
-            showPrevious=false;
-        }
-        else {
-            showPrevious=true;
+        if (page == 1) {
+            showPrevious = false;
+        } else {
+            showPrevious = true;
         }
         //根据当前页码，决定是否显示 下一页 按钮
-        if(page==totalPage){
-            showNext=false;
-        }
-        else{
-            showNext=true;
+        if (page == totalPage) {
+            showNext = false;
+        } else {
+            showNext = true;
         }
         //根据当前页码，决定是否显示 第一页 按钮
-        if(pages.contains(1)){
-            showFirstPage=false;
-        }
-        else{
-            showFirstPage=true;
+        if (pages.contains(1)) {
+            showFirstPage = false;
+        } else {
+            showFirstPage = true;
         }
         //根据当前页码，决定是否显示 最后一页 按钮
-        if(pages.contains(totalPage)){
-            showEndPage=false;
-        }
-        else{
-            showEndPage=true;
+        if (pages.contains(totalPage)) {
+            showEndPage = false;
+        } else {
+            showEndPage = true;
         }
 
     }

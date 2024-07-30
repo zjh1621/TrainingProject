@@ -68,7 +68,7 @@ public class QuestionService {
             questionDTO.setUser(user);//为DTO元素加上id对应的User对象
             questionDTOList.add(questionDTO);//将DTO元素加入队列
         }
-        pageDTO.setQuestionDTOList(questionDTOList);//向pageDTO注入questionDTOList
+        pageDTO.setData(questionDTOList);//向pageDTO注入questionDTOList
         pageDTO.setPagination(totalCount,page,size);//初始化pageDTO其他成员数据
 
         return pageDTO;//返回DTO队列
@@ -109,7 +109,7 @@ public class QuestionService {
             questionDTO.setUser(user);//为DTO元素加上id对应的User对象
             questionDTOList.add(questionDTO);//将DTO元素加入队列
         }
-        pageDTO.setQuestionDTOList(questionDTOList);//向pageDTO注入questionDTOList
+        pageDTO.setData(questionDTOList);//向pageDTO注入questionDTOList
         pageDTO.setPagination(totalCount,page,size);//初始化pageDTO其他成员数据
 
         return pageDTO;//返回DTO队列

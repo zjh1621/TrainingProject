@@ -2,12 +2,15 @@ package com.example.moon.service;
 
 import com.example.moon.DTO.CommentDTO;
 import com.example.moon.enums.CommentTypeEnum;
+import com.example.moon.enums.NotificationEnum;
 import com.example.moon.exception.CustomizeErrorCode;
 import com.example.moon.exception.CustomizeException;
 import com.example.moon.mapper.CommentMapper;
+import com.example.moon.mapper.NotificationMapper;
 import com.example.moon.mapper.QuestionMapper;
 import com.example.moon.mapper.UserMapper;
 import com.example.moon.model.*;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,8 @@ public class CommentService {
     private QuestionService questionService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     //向数据库保存评论
     @Transactional
@@ -55,6 +60,13 @@ public class CommentService {
             this.increaseComment(dbComment.getId());
             //该评论对应的文章的评论数加一
             questionService.increaseComment(dbComment.getParentId());
+            //向数据库保存该评论对应的通知对象
+            int type=NotificationEnum.REPLY_COMMENT.getType();
+            Long notifier = comment.getCommentator();
+            Long parentId = comment.getParentId();
+            Long receiverId = dbComment.getCommentator();
+            createNotification(type, notifier, parentId, receiverId);
+
         } else {
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -65,7 +77,35 @@ public class CommentService {
             commentMapper.insertSelective(comment);
             //被评论的文章的评论数加一
             questionService.increaseComment(comment.getParentId());
+            //向数据库保存该评论对应的通知对象
+            int type=NotificationEnum.REPLY_QUESTION.getType();
+            Long notifier = comment.getCommentator();
+            Long parentId = comment.getParentId();
+            Long receiverId = questionMapper.selectByPrimaryKey(comment.getParentId()).getCreator();
+            createNotification(type, notifier, parentId, receiverId);
         }
+    }
+
+    /**
+     * 向数据库保存该评论对应的通知对象
+     * @param type
+     * @param notifier
+     * @param parentId
+     * @param receiverId
+     */
+    private void createNotification(int type,Long notifier,Long parentId,Long receiverId) {
+        Notification notification = new Notification();
+        //当前时间
+        notification.setGmtCreate(System.currentTimeMillis());
+        //通知类型：回复的是问题还是评论
+        notification.setType(type);
+        //通知的发起人
+        notification.setNotifier(notifier);
+        //通知对应的问题或评论ID
+        notification.setParentId(parentId);
+        //通知的接收人
+        notification.setReceiver(receiverId);
+        notificationMapper.insertSelective(notification);
     }
 
     //增加评论数

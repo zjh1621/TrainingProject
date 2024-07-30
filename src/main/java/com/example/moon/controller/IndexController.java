@@ -18,7 +18,7 @@ public class IndexController {
     public String index(HttpServletRequest request,
                         Model model,
                         @RequestParam(name = "page",defaultValue = "1") Integer page,
-                        @RequestParam(name = "size",defaultValue = "5") Integer size) {
+                        @RequestParam(name = "size",defaultValue = "8") Integer size) {
 
         PageDTO pageDTO = questionService.list(page,size);//获取首页问题列表信息
         model.addAttribute("pageDTO", pageDTO);//将pageDTO注入model，传入前端
