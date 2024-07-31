@@ -89,18 +89,21 @@ public class CommentService {
     /**
      * 向数据库保存该评论对应的通知对象
      * @param type
-     * @param notifier
+     * @param notifierId
      * @param parentId
      * @param receiverId
      */
-    private void createNotification(int type,Long notifier,Long parentId,Long receiverId) {
+    private void createNotification(int type,Long notifierId,Long parentId,Long receiverId) {
+        if(notifierId == receiverId){
+            return;
+        }
         Notification notification = new Notification();
         //当前时间
         notification.setGmtCreate(System.currentTimeMillis());
         //通知类型：回复的是问题还是评论
         notification.setType(type);
         //通知的发起人
-        notification.setNotifier(notifier);
+        notification.setNotifier(notifierId);
         //通知对应的问题或评论ID
         notification.setParentId(parentId);
         //通知的接收人

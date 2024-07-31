@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/moon.css">
-    <link rel="stylesheet" href="/editormd/css/editormd.css" />
+    <link rel="stylesheet" href="/editormd/css/editormd.css"/>
     <script src="/js/jquery-3.7.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/moon.js"></script>
@@ -45,7 +45,10 @@
                             height: 600,
                             path: "/editormd/lib/",
                             delay: 0,
-                            placeholder: "请输入问题描述"
+                            placeholder: "请输入问题描述",
+                            imageUpload: true,
+                            imageFormats:["jpg","jpeg","gif","png","bmp","webp"],
+                            imageUploadURL:"/file/upload",
                         });
                     });
                 </script>

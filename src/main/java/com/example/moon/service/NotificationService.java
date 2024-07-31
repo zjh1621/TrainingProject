@@ -72,6 +72,9 @@ public class NotificationService {
         //toSet以去重
         Set<Long> notifierUserIdList = notificationList.stream().map(notify -> notify.getNotifier()).collect(Collectors.toSet());
         List<Long> userIdList = new ArrayList<>(notifierUserIdList);
+        if(userIdList.size()==0){
+            return new PageDTO();
+        }
 
         UserExample userExample = new UserExample();
         userExample.createCriteria()
@@ -142,7 +145,7 @@ public class NotificationService {
         if(notification.getType()== NotificationEnum.REPLY_COMMENT.getType()){
             //如果回复的是评论，就找出这条评论，并将它回复的文章作为parentId，用于链接跳转
             Comment comment = commentMapper.selectByPrimaryKey(notification.getParentId());
-            notification.setParentId(comment.getParentId());
+            notificationDTO.setParentId(comment.getParentId());
             //设置outerMessage为评论内容
             notificationDTO.setOuterMessage(comment.getContent());
         }else if (notification.getType()== NotificationEnum.REPLY_QUESTION.getType()){

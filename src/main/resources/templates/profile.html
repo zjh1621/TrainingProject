@@ -42,7 +42,7 @@
             </div>
             <!--消息通知列表-->
             <div th:if="${section=='replies'}">
-                <div class="media" th:each="notificationDTO : ${pageDTO.getData}">
+                <div class="media" th:each="notificationDTO : ${pageDTO.getData}" th:if="pageDTO.getData!=null">
                     <div class="media-left">
                         <a href="#">
                             <img class="media-object img-thumbnail"
