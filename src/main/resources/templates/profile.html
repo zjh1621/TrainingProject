@@ -40,6 +40,7 @@
                     </div>
                 </div>
             </div>
+            <!--消息通知列表-->
             <div th:if="${section=='replies'}">
                 <div class="media" th:each="notificationDTO : ${pageDTO.getData}">
                     <div class="media-left">
@@ -49,9 +50,16 @@
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading">
-                            <a th:href="@{'/question/'+${notificationDTO.parentId}}" th:text="有人回复你的评论"></a>
-                        </h4><br>
+                        <h4 class="media-heading" th:if="${notificationDTO.type==0}"><!--0表示回复的问题-->
+                            <span th:text="${notificationDTO.notifier.name+' 回复了你的问题 '}"></span>
+                            <a th:href="@{'/notification/'+${notificationDTO.id}}" th:text="${notificationDTO.outerMessage}"></a>
+                        </h4>
+                        <h4 class="media-heading" th:if="${notificationDTO.type==1}"><!--1表示回复的评论-->
+                            <span th:text="${notificationDTO.notifier.name+' 回复了你的评论 '}"></span>
+                            <a th:href="@{'/notification/'+${notificationDTO.id}}" th:text="${notificationDTO.outerMessage}"></a>
+                        </h4>
+                        <span class="label label-danger" th:if="${notificationDTO.readStatus==0}">未读</span>
+                        <br>
                         <span class="text-desc">
                             <span th:text="${#calendars.format(notificationDTO.gmtCreate,'yyyy-MM-dd HH:mm')}">
                             </span>

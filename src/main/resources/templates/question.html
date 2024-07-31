@@ -6,7 +6,11 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/moon.css">
+    <link rel="stylesheet" href="/editormd/css/editormd.preview.css">
     <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/editormd/editormd.js"></script>
+    <script src="/editormd/lib/marked.min.js"></script>
+    <script src="/editormd/lib/prettify.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/moon.js"></script>
     <script src="/js/moment.js"></script>
@@ -28,10 +32,16 @@
               发布时间：<span th:text="${#calendars.format(questionDTO.gmtCreate,'yyyy-MM-dd HH:mm')}"></span> |
               浏览次数：<span th:text="${questionDTO.viewCount}"></span>
           </span>
-                <hr>
-                <br>
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${questionDTO.description}"
-                     style="font-size: large;"></div>
+                <hr style="margin-bottom: 0px;">
+                <!--文章内容-->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
+                    <textarea style="display:none;" th:text="${questionDTO.description}"></textarea>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        editormd.markdownToHTML("question-view", {});
+                    });
+                </script>
                 <br>
                 <br>
 

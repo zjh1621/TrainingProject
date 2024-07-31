@@ -14,7 +14,7 @@ public class NotificationDTO {
     //0表示问题，1表示评论
     private int type;
 
-    //评论或文章的id
+    //通知所在的 文章 的id
     private Long parentId;
 
     //是否已读，0未读，1已读

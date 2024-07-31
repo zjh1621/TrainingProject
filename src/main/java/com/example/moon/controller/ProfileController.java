@@ -1,5 +1,6 @@
 package com.example.moon.controller;
 
+import com.example.moon.DTO.NotificationDTO;
 import com.example.moon.DTO.PageDTO;
 import com.example.moon.mapper.UserMapper;
 import com.example.moon.model.User;
@@ -35,6 +36,11 @@ public class ProfileController {
         if(user==null){
             return"redirect:/";
         }
+
+        //未读数
+        Long unreadCount = notificationService.unreadCount(user.getId());
+        model.addAttribute("unreadCount",unreadCount);
+
         if("questions".equals(action)){
             model.addAttribute("section","questions");
             model.addAttribute("sectionName","我的提问");
@@ -47,7 +53,6 @@ public class ProfileController {
         else if("replies".equals(action)){
             model.addAttribute("section","replies");
             model.addAttribute("sectionName","最新回复");
-            model.addAttribute("unreadCount","");
             //分页
             PageDTO pageDTO= notificationService.list(user.getId(),page,size);
             model.addAttribute("pageDTO",pageDTO);

@@ -7,6 +7,7 @@ public enum CustomizeErrorCode {
     TARGET_PARAM_NOT_FOUND(40000, "请求参数错误", ""),
     QUESTION_NOT_FOUND(40001, "你访问的文章似乎不存在呢", ""),
     COMMENT_NOT_FOUND(40002, "回复的评论不存在", ""),
+    NOTIFICATION_NOT_FOUND(40003, "访问的通知不存在", ""),
 
     UNAUTHORIZED_ACCESS(40100, "无权限访问", ""),
     NO_LOGIN(40101, "先登录再操作吧~", ""),
